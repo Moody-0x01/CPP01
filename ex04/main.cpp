@@ -9,7 +9,6 @@ int main(int ac, char **av)
 	}
 	Rpl replacer(av[1], av[3], av[2]);
 
-	replacer.log();
 	if (!replacer.prepare_content())
 		return (1);
 	replacer.apply();

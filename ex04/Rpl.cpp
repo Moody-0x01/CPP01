@@ -10,18 +10,11 @@ Rpl::Rpl(std::string fn, std::string repl, std::string target) : _filename(fn), 
 {
 }
 
-void Rpl::log(void)
-{
-	std::cout << "File: " << _filename << "\n";
-	std::cout << "replacement: " << _repl << "\n";
-	std::cout << "to replace: " << _target << "\n";
-}
-
 void Rpl::help(std::string error, std::string program)
 {
-	std::cout << error << "\n";
-	std::cout << "Usage: ";
-	std::cout << program << " <filename> " << "<target> " << "<replacement>\n";
+	std::cerr << error << "\n";
+	std::cerr << "Usage: ";
+	std::cerr << program << " <filename> " << "<target> " << "<replacement>\n";
 }
 
 int Rpl::prepare_content(void)
@@ -30,7 +23,7 @@ int Rpl::prepare_content(void)
     std::ifstream file(_filename.c_str());
     
     if (!file.is_open()) {
-        std::cerr << "Could not open file: " << _filename << ": ";
+        std::cerr << "rpl: Could not open file: " << _filename << ": ";
 		perror("");
 		return (0);
     }
@@ -48,12 +41,15 @@ void Rpl::apply(void)
 
 	if (_repl == _target)
 		return ;
+	if (_target == "")
+		return ;
 	offset = _content.find(_target, 0);
 	do {
 		if (offset == std::string::npos)
 			break ;
 		_content.erase(offset, _target.size());
-		_content.insert(offset, _repl.c_str(), _repl.size());
+		if (_repl.size())
+			_content.insert(offset, _repl.c_str(), _repl.size());
 		offset = _content.find(_target, offset + 1);
 	} while (true);
 }
@@ -63,7 +59,7 @@ void Rpl::dump(void)
     std::ofstream file(_dump_filename.c_str());
     
     if (!file.is_open()) {
-        std::cerr << "Could not open file: " << _dump_filename << ": ";
+        std::cerr << "rpl: Could not open file: " << _dump_filename << ": ";
 		perror("");
 		return ;
     }

@@ -12,7 +12,6 @@ public:
 	Rpl(std::string fn, std::string repl, std::string target);
 	~Rpl();
 
-	void log(void);
 	int prepare_content(void);
 	void apply(void);
 	void dump(void);
